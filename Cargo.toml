@@ -1,5 +1,5 @@
 [package]
-name = "hg_api"
+name = "huggingface_inference_rs"
 version = "0.3.0"
 edition = "2021"
 author = "yvonne-aizawa"
