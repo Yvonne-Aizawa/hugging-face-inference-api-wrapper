@@ -3,26 +3,28 @@ use serde::{Deserialize, Serialize};
 
 use crate::Client;
 impl Client {
+    /// Get answers to a question
+    /// 
+    /// it takes the context and question as arguments
     pub async fn get_question(
         &self,
         context: String,
         question: String,
     ) -> Result<Answer, Box<dyn std::error::Error>> {
+        log::trace!("getting answers");
+
         let mut headers = header::HeaderMap::new();
         headers.insert(
             "Authorization",
             format!("Bearer {}", self.config.key).parse()?,
         );
+        log::trace!("authenticating with {}", self.config.key);
+
         headers.insert("Content-Type", "application/x-www-form-urlencoded".parse()?);
 
         let client = reqwest::Client::new();
-        // {
-        // "inputs": {
-        // "question": "What's my name?",
-        // "context": "My name is Clara and I live in Berkeley."
-        // }
         let body = serde_json::to_string(&QuestionQuery { question, context })?;
-
+        log::info!("sending request for model {}", self.config.question_model);
         let res = client
             .post(format!(
                 "https://api-inference.huggingface.co/models/{}",
@@ -35,8 +37,12 @@ impl Client {
             .text()
             .await?;
         dbg!(&res);
-        let classifications: Result<Answer, serde_json::Error> = serde_json::from_str(&res);
-        Ok(classifications?)
+        let answer: Result<Answer, serde_json::Error> = serde_json::from_str(&res);
+        if let Err(e) = answer {
+            log::error!("error: {}", e);
+            return Err(Box::new(e));
+        }
+        Ok(answer?)
     }
 }
 #[derive(Serialize)]

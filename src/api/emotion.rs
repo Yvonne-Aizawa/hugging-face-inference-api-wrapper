@@ -2,11 +2,15 @@ use reqwest::header;
 use serde::Deserialize;
 
 use crate::Client;
+
 impl Client {
+    /// Get emotions from a string of text
     pub async fn get_emotions(
         &self,
         string: String,
     ) -> Result<Vec<Mood>, Box<dyn std::error::Error>> {
+        log::trace!("getting emotions");
+
         let mut headers = header::HeaderMap::new();
         headers.insert(
             "Authorization",
@@ -15,6 +19,8 @@ impl Client {
         headers.insert("Content-Type", "application/x-www-form-urlencoded".parse()?);
 
         let client = reqwest::Client::new();
+        log::info!("sending request for model {}", self.config.emotion_model);
+
         let res = client
             .post(format!(
                 "https://api-inference.huggingface.co/models/{}",
@@ -27,6 +33,10 @@ impl Client {
             .text()
             .await?;
         let mood: Result<Vec<Vec<Mood>>, serde_json::Error> = serde_json::from_str(&res);
+        if let Err(e) = mood {
+            log::error!("error: {}", e);
+            return Err(Box::new(e));
+        }
         Ok(mood?.into_iter().flatten().collect())
     }
 }

@@ -3,18 +3,24 @@ use serde::Deserialize;
 
 use crate::Client;
 impl Client {
+    /// Get token classifications from a string
     pub async fn get_classifications(
         &self,
         string: String,
     ) -> Result<Vec<Classification>, Box<dyn std::error::Error>> {
+        log::trace!("getting classifications");
         let mut headers = header::HeaderMap::new();
         headers.insert(
             "Authorization",
             format!("Bearer {}", self.config.key).parse()?,
         );
         headers.insert("Content-Type", "application/x-www-form-urlencoded".parse()?);
-
+        log::trace!("authenticating with {}", self.config.key);
         let client = reqwest::Client::new();
+        log::info!(
+            "sending request for model {}",
+            self.config.classification_model
+        );
         let res = client
             .post(format!(
                 "https://api-inference.huggingface.co/models/{}",
@@ -29,6 +35,10 @@ impl Client {
 
         let classifications: Result<Vec<Classification>, serde_json::Error> =
             serde_json::from_str(&res);
+        if let Err(e) = classifications {
+            log::error!("error: {}", e);
+            return Err(Box::new(e));
+        }
         Ok(classifications?)
     }
 }
