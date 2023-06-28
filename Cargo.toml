@@ -1,9 +1,11 @@
 [package]
 name = "hg_api"
-version = "0.2.2"
+version = "0.3.0"
 edition = "2021"
 author = "yvonne-aizawa"
-
+license = "GPL-3.0"
+description = "this package is a small wrapper for hugging face Inference API"
+repository = "https://github.com/Yvonne-Aizawa/hugging-face-inference-api-wrapper"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
