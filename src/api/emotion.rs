@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use reqwest::header;
 use serde::Deserialize;
 
@@ -8,7 +10,7 @@ impl Client {
     pub async fn get_emotions(
         &self,
         string: String,
-    ) -> Result<Vec<Mood>, Box<dyn std::error::Error>> {
+    ) -> Result<Vec<Mood>, Box<dyn Error + Send + Sync>> {
         log::trace!("getting emotions");
 
         let mut headers = header::HeaderMap::new();

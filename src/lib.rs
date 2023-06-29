@@ -1,4 +1,3 @@
-
 mod api;
 
 /// Configuration for the client

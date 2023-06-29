@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use reqwest::header;
 use serde::Deserialize;
 
@@ -7,7 +9,7 @@ impl Client {
     pub async fn get_classifications(
         &self,
         string: String,
-    ) -> Result<Vec<Classification>, Box<dyn std::error::Error>> {
+    ) -> Result<Vec<Classification>, Box<dyn Error + Send + Sync>> {
         log::trace!("getting classifications");
         let mut headers = header::HeaderMap::new();
         headers.insert(

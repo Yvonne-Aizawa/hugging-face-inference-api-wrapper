@@ -1,16 +1,18 @@
+use std::error::Error;
+
 use reqwest::header;
 use serde::{Deserialize, Serialize};
 
 use crate::Client;
 impl Client {
     /// Get answers to a question
-    /// 
+    ///
     /// it takes the context and question as arguments
     pub async fn get_question(
         &self,
         context: String,
         question: String,
-    ) -> Result<Answer, Box<dyn std::error::Error>> {
+    ) -> Result<Answer, Box<dyn Error + Send + Sync>> {
         log::trace!("getting answers");
 
         let mut headers = header::HeaderMap::new();
