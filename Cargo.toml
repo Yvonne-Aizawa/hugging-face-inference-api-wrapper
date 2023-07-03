@@ -1,6 +1,6 @@
 [package]
 name = "huggingface_inference_rs"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 author = "yvonne-aizawa"
 license = "GPL-3.0"

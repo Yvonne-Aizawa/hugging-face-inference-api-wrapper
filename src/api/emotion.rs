@@ -42,9 +42,9 @@ impl Client {
         Ok(mood?.into_iter().flatten().collect())
     }
 }
-#[derive(Deserialize)]
+#[derive(Deserialize , Debug)]
 pub struct Mood {
-    pub label: String,
+    pub label: MoodLabel,
     pub score: f32,
 }
 #[cfg(test)]
@@ -59,4 +59,64 @@ mod tests {
         let emotions = client.get_emotions("hello there".to_string()).await;
         assert!(emotions.is_ok());
     }
+}
+//the inputs are not capitalized so we need to do that
+#[derive(Deserialize, Debug)]
+pub enum MoodLabel {
+    #[serde(rename = "disappointment")]
+    Disappointment,
+    #[serde(rename = "sadness")]
+    Sadness,
+    #[serde(rename = "annoyance")]
+    Annoyance,
+    #[serde(rename = "neutral")]
+    Neutral,
+    #[serde(rename = "disapproval")]
+    Disapproval,
+    #[serde(rename = "realization")]
+    Realization,
+    #[serde(rename = "nervousness")]
+    Nervousness,
+    #[serde(rename = "approval")]
+    Approval,
+    #[serde(rename = "joy")]
+    Joy,
+    #[serde(rename = "anger")]
+    Anger,
+    #[serde(rename = "embarrassment")]
+    Embarrassment,
+    #[serde(rename = "caring")]
+    Caring,
+    #[serde(rename = "remorse")]
+    Remorse,
+    #[serde(rename = "disgust")]
+    Disgust,
+    #[serde(rename = "grief")]
+    Grief,
+    #[serde(rename = "confusion")]
+    Confusion,
+    #[serde(rename = "relief")]
+    Relief,
+    #[serde(rename = "desire")]
+    Desire,
+    #[serde(rename = "admiration")]
+    Admiration,
+    #[serde(rename = "optimism")]
+    Optimism,
+    #[serde(rename = "fear")]
+    Fear,
+    #[serde(rename = "love")]
+    Love,
+    #[serde(rename = "excitement")]
+    Excitement,
+    #[serde(rename = "curiosity")]
+    Curiosity,
+    #[serde(rename = "amusement")]
+    Amusement,
+    #[serde(rename = "surprise")]
+    Surprise,
+    #[serde(rename = "gratitude")]
+    Gratitude,
+    #[serde(rename = "pride")]
+    Pride,
 }
